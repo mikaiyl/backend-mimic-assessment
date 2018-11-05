@@ -46,25 +46,60 @@ columns, so the output looks better.
 import random
 import sys
 
+def read_file_words( filename ):
+    with open( filename, 'r' ) as f:
+        return f.read().split()
 
-def mimic_dict(filename):
+
+def find_indexes( word, word_list ):
+    index_list = []
+    for ( i, v ) in enumerate( word_list, 1 ):
+        if v.lower() == word.lower():
+            if i < len( word_list ):
+                index_list.append( i )
+            else:
+                pass
+        else:
+            pass
+    return index_list
+
+
+def mimic_dict( filename ):
     """Returns mimic dict mapping each word to list of words which follow it."""
     # +++your code here+++
-    raise NotImplementedError("Get to Work!")
+    # Read the file and return wordlist.
+    words = read_file_words( filename )
+    # get keys for dict
+    keys = list( set( words ) )
+    # Iterate through the keys and create dict
+    dictionary = {}
+    for key in keys:
+        index_list = find_indexes( key, words )
+        dictionary[ key ] = filter( lambda w: words.index( w ) in index_list, words )
+    # return dict
+    return dictionary 
 
 
 def print_mimic(mimic_dict, word):
     """Given mimic dict and start word, prints 200 random words."""
     # +++your code here+++
-    raise NotImplementedError("Get to Work!")
-
+    key = word if word in mimic_dict.keys() else mimic_dict.keys()[0]
+    text = key + ' '
+    for i in range(200):
+        if type( mimic_dict[ key ] ) == type( [] ) and len( mimic_dict[ key ] ) > 0 :
+            key = random.choice( mimic_dict[ key ] )
+        else:
+            key = random.choice( mimic_dict.keys() )
+        text += key + ' '
+    print text
+    return
+        
 
 # Provided main(), calls mimic_dict() and mimic()
 def main():
     if len(sys.argv) != 2:
         print 'usage: python mimic.py file-to-read'
         sys.exit(1)
-
     d = mimic_dict(sys.argv[1])
     print_mimic(d, '')
 
