@@ -48,20 +48,7 @@ import sys
 
 def read_file_words( filename ):
     with open( filename, 'r' ) as f:
-        return f.read().split()
-
-
-def find_indexes( word, word_list ):
-    index_list = []
-    for ( i, v ) in enumerate( word_list, 1 ):
-        if v.lower() == word.lower():
-            if i < len( word_list ):
-                index_list.append( i )
-            else:
-                pass
-        else:
-            pass
-    return index_list
+        return f.read().lower().split()
 
 
 def mimic_dict( filename ):
@@ -69,17 +56,15 @@ def mimic_dict( filename ):
     # +++your code here+++
     # Read the file and return wordlist.
     words = read_file_words( filename )
-    # get keys for dict
-    keys = list( set( words ) )
-    # Iterate through the keys and create dict
+    # Iterate through the words and create dict
     dictionary = {}
-    for key in keys:
-        index_list = find_indexes( key, words )
-        dictionary[ key ] = filter( lambda w: words.index( w ) in index_list, words )
+    for index, word in enumerate( words, 1 ):
+        if len( words ) > index:
+            dictionary[ word ] = [ words[index] ] if word not in dictionary else dictionary[ word ] + [ words[index] ]
     # return dict
     return dictionary 
 
-
+ 
 def print_mimic(mimic_dict, word):
     """Given mimic dict and start word, prints 200 random words."""
     # +++your code here+++
